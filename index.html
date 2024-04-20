@@ -1,159 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kanban Board</title>
+  <title>Esempio drag and drop</title>
   <style>
-    .board {
-      display: flex;
-      justify-content: space-between;
+    /* import drag-act.css */
+    @import url("https://codepen.io/TPG/pen/YzBmpKX.css");
+
+    /* demo page layout */
+    :root {
+      font-family: sans-serif;
+      font-size: 1.1rem;
     }
-    .column {
-      width: 30%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: #f9f9f9;
+
+    @media (max-width: 40rem) {
+      :root {
+        font-size: 1rem;
+      }
     }
-    .column h2 {
-      text-align: center;
+
+    @media (max-width: 30rem) {
+      :root {
+        font-size: 0.9rem;
+      }
     }
-    .task {
-      padding: 10px;
-      margin-bottom: 5px;
-      border: 1px solid #ddd;
-      border-radius: 3px;
-      background-color: #fff;
-      cursor: grab;
+
+    body {
+      background: #fff;
+      color: #000;
+      margin: 0;
+      min-width: 20rem;
+      padding: 1rem;
     }
-    .selected {
-      background-color: #c7ebff;
+
+    @media (max-width: 40rem) {
+      body {
+        padding: 0.9rem;
+      }
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 1rem 0;
+      padding: 0;
+    }
+
+    section {
+      column-gap: 1rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-width: 40rem) {
+      section {
+        column-gap: 0.9rem;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        row-gap: 0.9rem;
+      }
     }
   </style>
 </head>
+
 <body>
-  <h1>Kanban Board</h1>
-  <div class="board" role="group">
-    <div id="todo" class="column" role="region" aria-label="To Do" aria-describedby="todo-description" tabindex="0">
-      <h2>To Do</h2>
-      <p id="todo-description" class="sr-only">Tasks to be done</p>
-      <!-- Tasks will be added dynamically here -->
+  <!-- https://creativecommons.org/licenses/by-sa/4.0/ -->
+
+  <h1>Esempio Drag and Drop</h1>
+  <p>Seleziona la definizione e assegnala alla colonna corrispondente al suo termine.</p>
+  <section id="demo">
+
+    <div role="listbox" data-drag-act="droptarget">
+      <h3 data-drag-act="label">Definizioni</h3>
+      <ol role="none" data-drag-act="parent">
+        <li role="option" data-drag-act="dragitem">Condivisione di metodo di lavoro, norme, obiettivi e ruoli.</li>
+        <li role="option" data-drag-act="dragitem">Il gruppo è un tutto unico che si comporta come un organismo vivente.
+        </li>
+        <li role="option" data-drag-act="dragitem">Azione reciproca tra i membri del gruppo per raggiungere un obiettivo
+          comune.</li>
+      </ol>
     </div>
-    <div id="in-progress" class="column" role="region" aria-label="In Progress" aria-describedby="in-progress-description" tabindex="0">
-      <h2>In Progress</h2>
-      <p id="in-progress-description" class="sr-only">Tasks currently in progress</p>
-      <!-- Tasks will be added dynamically here -->
+
+    <div role="listbox" data-drag-act="droptarget">
+      <h3 data-drag-act="label">Interazione</h3>
+      <ol role="none" data-drag-act="parent">
+
+      </ol>
     </div>
-    <div id="done" class="column" role="region" aria-label="Done" aria-describedby="done-description" tabindex="0">
-      <h2>Done</h2>
-      <p id="done-description" class="sr-only">Completed tasks</p>
-      <!-- Tasks will be added dynamically here -->
+
+    <div role="listbox" data-drag-act="droptarget">
+      <h3 data-drag-act="label">Interdipendenza</h3>
+      <ol role="none" data-drag-act="parent">
+
+      </ol>
     </div>
-  </div>
 
-  <script>
-    const todoColumn = document.getElementById("todo");
-    const inProgressColumn = document.getElementById("in-progress");
-    const doneColumn = document.getElementById("done");
+    <div role="listbox" data-drag-act="droptarget">
+      <h3 data-drag-act="label">Integrazione</h3>
+      <ol role="none" data-drag-act="parent">
 
-    let originColumn = todoColumn;
+      </ol>
+    </div>
 
-    const columns = [todoColumn, inProgressColumn, doneColumn];
+  </section>
 
-    const tasks = [
-      { id: 1, text: "Task 1" },
-      { id: 2, text: "Task 2" },
-      { id: 3, text: "Task 3" }
-    ];
 
-    tasks.forEach(task => {
-      const taskElement = createTaskElement(task.text);
-      todoColumn.appendChild(taskElement);
+  <script type="module">
+    //import drag-act.js
+    //import { default as DragAct } from 'https://codepen.io/TPG/pen/rNPXMEq.js';
+    import { default as DragAct } from './script.js';
+
+    //instantiate the demo instance
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const demo = new DragAct('#demo');
+      /*console.log(demo.collection);*/
+
+      demo.addCallback(function () {
+        /* console.log(this.collection); */
+        
+      });
+
+
+
     });
 
-    function createTaskElement(text) {
-      const taskElement = document.createElement("button");
-      taskElement.textContent = text;
-      taskElement.classList.add("task");
-      taskElement.setAttribute("role", "button");
-      taskElement.setAttribute("draggable", "true");
-      taskElement.setAttribute("aria-grabbed", "false");
-      taskElement.setAttribute("aria-describedby", `${text.toLowerCase().replace(/\s+/g, '-')}-description`);
-      taskElement.addEventListener("dragstart", handleDragStart);
-      taskElement.addEventListener("click", handleTaskClick);
-      taskElement.addEventListener("keydown", handleTaskKeyDown);
-      return taskElement;
-    }
-
-    function handleDragStart(event) {
-      event.dataTransfer.setData("text/plain", event.target.textContent);
-      event.target.setAttribute("aria-grabbed", "true");
-      originColumn = event.target.parentNode;
-      console.log("originColumn: ",originColumn)
-    }
-
-    function handleTaskClick(event) {
-      selectTask(event.target);
-    }
-
-    function handleTaskKeyDown(event) {
-      if (event.key === " ") {
-        console.log("spacebar selected on ", event.target)
-        event.preventDefault();
-        selectTask(event.target);
-        dropSelectedTask(event.target); // qui ho la colonna di arrivo ma ho bisogno anche della colonna di partenza per poter rimuovere il task
-      }
-    }
-
-    function selectTask(taskElement) {
-      const selectedTask = document.querySelector(".selected");
-      if (selectedTask) {
-        selectedTask.classList.remove("selected");
-      }
-      taskElement.classList.add("selected");
-    }
-
-    function dropSelectedTask(targetColumn) {
-      const selectedTask = document.querySelector(".selected");
-      /* if (selectedTask && !targetColumn.contains(selectedTask)) { */
-        console.log("entro?")
-        targetColumn.appendChild(selectedTask);
-        selectedTask.classList.remove("selected");
-        targetColumn.removeChild(selectedTask)
-        console.log("remove child")
-      /* } */
-    }
-
-    function handleDropKeydown(event){
-      if (event.key === " ") {
-        console.log("spacebar selected on ", event.target)
-        event.preventDefault();
-        selectTask(event.target);
-        dropSelectedTask(event.target);
-      }
-    }
-
-    columns.forEach(column => {
-      column.addEventListener("dragover", handleDragOver);
-      column.addEventListener("drop", handleDrop);
-      column.addEventListener("keydown", handleDropKeydown);
-    });
-
-    function handleDragOver(event) {
-      event.preventDefault();
-    }
-
-    function handleDrop(event) {
-      console.log("handleDrop",event.target)
-      
-      event.preventDefault();
-      const droppedTaskText = event.dataTransfer.getData("text/plain");
-      const newTaskElement = createTaskElement(droppedTaskText);
-      event.target.appendChild(newTaskElement);
-
-      event.originColumn.removeChild(newTaskElement)
-    }
   </script>
 </body>
+
 </html>
