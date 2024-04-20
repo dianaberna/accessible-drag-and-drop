@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban Board</title>
+  <style>
+    .board {
+      display: flex;
+      justify-content: space-between;
+    }
+    .column {
+      width: 30%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .column h2 {
+      text-align: center;
+    }
+    .task {
+      padding: 10px;
+      margin-bottom: 5px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      background-color: #fff;
+      cursor: grab;
+    }
+    .selected {
+      background-color: #c7ebff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kanban Board</h1>
+  <div class="board" role="group">
+    <div id="todo" class="column" role="region" aria-label="To Do" aria-describedby="todo-description" tabindex="0">
+      <h2>To Do</h2>
+      <p id="todo-description" class="sr-only">Tasks to be done</p>
+      <!-- Tasks will be added dynamically here -->
+    </div>
+    <div id="in-progress" class="column" role="region" aria-label="In Progress" aria-describedby="in-progress-description" tabindex="0">
+      <h2>In Progress</h2>
+      <p id="in-progress-description" class="sr-only">Tasks currently in progress</p>
+      <!-- Tasks will be added dynamically here -->
+    </div>
+    <div id="done" class="column" role="region" aria-label="Done" aria-describedby="done-description" tabindex="0">
+      <h2>Done</h2>
+      <p id="done-description" class="sr-only">Completed tasks</p>
+      <!-- Tasks will be added dynamically here -->
+    </div>
+  </div>
+
+  <script>
+    const todoColumn = document.getElementById("todo");
+    const inProgressColumn = document.getElementById("in-progress");
+    const doneColumn = document.getElementById("done");
+
+    let originColumn = todoColumn;
+
+    const columns = [todoColumn, inProgressColumn, doneColumn];
+
+    const tasks = [
+      { id: 1, text: "Task 1" },
+      { id: 2, text: "Task 2" },
+      { id: 3, text: "Task 3" }
+    ];
+
+    tasks.forEach(task => {
+      const taskElement = createTaskElement(task.text);
+      todoColumn.appendChild(taskElement);
+    });
+
+    function createTaskElement(text) {
+      const taskElement = document.createElement("button");
+      taskElement.textContent = text;
+      taskElement.classList.add("task");
+      taskElement.setAttribute("role", "button");
+      taskElement.setAttribute("draggable", "true");
+      taskElement.setAttribute("aria-grabbed", "false");
+      taskElement.setAttribute("aria-describedby", `${text.toLowerCase().replace(/\s+/g, '-')}-description`);
+      taskElement.addEventListener("dragstart", handleDragStart);
+      taskElement.addEventListener("click", handleTaskClick);
+      taskElement.addEventListener("keydown", handleTaskKeyDown);
+      return taskElement;
+    }
+
+    function handleDragStart(event) {
+      event.dataTransfer.setData("text/plain", event.target.textContent);
+      event.target.setAttribute("aria-grabbed", "true");
+      originColumn = event.target.parentNode;
+      console.log("originColumn: ",originColumn)
+    }
+
+    function handleTaskClick(event) {
+      selectTask(event.target);
+    }
+
+    function handleTaskKeyDown(event) {
+      if (event.key === " ") {
+        console.log("spacebar selected on ", event.target)
+        event.preventDefault();
+        selectTask(event.target);
+        dropSelectedTask(event.target); // qui ho la colonna di arrivo ma ho bisogno anche della colonna di partenza per poter rimuovere il task
+      }
+    }
+
+    function selectTask(taskElement) {
+      const selectedTask = document.querySelector(".selected");
+      if (selectedTask) {
+        selectedTask.classList.remove("selected");
+      }
+      taskElement.classList.add("selected");
+    }
+
+    function dropSelectedTask(targetColumn) {
+      const selectedTask = document.querySelector(".selected");
+      /* if (selectedTask && !targetColumn.contains(selectedTask)) { */
+        console.log("entro?")
+        targetColumn.appendChild(selectedTask);
+        selectedTask.classList.remove("selected");
+        targetColumn.removeChild(selectedTask)
+        console.log("remove child")
+      /* } */
+    }
+
+    function handleDropKeydown(event){
+      if (event.key === " ") {
+        console.log("spacebar selected on ", event.target)
+        event.preventDefault();
+        selectTask(event.target);
+        dropSelectedTask(event.target);
+      }
+    }
+
+    columns.forEach(column => {
+      column.addEventListener("dragover", handleDragOver);
+      column.addEventListener("drop", handleDrop);
+      column.addEventListener("keydown", handleDropKeydown);
+    });
+
+    function handleDragOver(event) {
+      event.preventDefault();
+    }
+
+    function handleDrop(event) {
+      console.log("handleDrop",event.target)
+      
+      event.preventDefault();
+      const droppedTaskText = event.dataTransfer.getData("text/plain");
+      const newTaskElement = createTaskElement(droppedTaskText);
+      event.target.appendChild(newTaskElement);
+
+      event.originColumn.removeChild(newTaskElement)
+    }
+  </script>
+</body>
+</html>
