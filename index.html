@@ -7,7 +7,16 @@
   <title>Esempio drag and drop</title>
   <style>
     /* import drag-act.css */
-    @import url("https://codepen.io/TPG/pen/YzBmpKX.css");
+    /* @import url("https://codepen.io/TPG/pen/YzBmpKX.css"); */
+    @import url("./style.css");
+   
+    /* body, [data-drag-act="droptarget"], [data-drag-act="label"]{
+      background-color: #f2f2f2 !important;
+    } */
+
+    [data-drag-act="label"]{
+      color: black;
+    }
 
     /* demo page layout */
     :root {
@@ -67,8 +76,7 @@
 <body>
   <!-- https://creativecommons.org/licenses/by-sa/4.0/ -->
 
-  <h1>Esempio Drag and Drop</h1>
-  <p>Seleziona la definizione e assegnala alla colonna corrispondente al suo termine.</p>
+  <p>Nel lavoro di gruppo si sviluppano dinamiche relazionali. Associa a ciascuna dinamica la sua caratterizzazione.</p>
   <section id="demo">
 
     <div role="listbox" data-drag-act="droptarget">
@@ -105,7 +113,6 @@
 
   </section>
 
-
   <script type="module">
     //import drag-act.js
     //import { default as DragAct } from 'https://codepen.io/TPG/pen/rNPXMEq.js';
@@ -119,10 +126,7 @@
 
       demo.addCallback(function () {
         /* console.log(this.collection); */
-        
       });
-
-
 
     });
 

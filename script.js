@@ -1714,6 +1714,8 @@ export default class DragAct {
         //scope focus listener
         this.#scope.addEventListener('focus', (e) => {
 
+            console.log("focus listener")
+
             //look for relevant references from the event node
             const droptarget = this.#getClosest(e.target);
             const sorted = this.#getClosest(e.target, 'sorted');
