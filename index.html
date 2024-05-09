@@ -4,20 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Esempio drag and drop</title>
+  <title>Esercitazione drag and drop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
   <style>
-    /* import drag-act.css */
-    /* @import url("https://codepen.io/TPG/pen/YzBmpKX.css"); */
+
     @import url("./style.css");
-   
-
-
-    /* body, [data-drag-act="droptarget"], [data-drag-act="label"]{
-      background-color: #f2f2f2 !important;
-    } */
 
     body{
       font-size: 1rem;
@@ -30,7 +23,6 @@
       font-weight: 600;
     }
 
-    /* demo page layout */
     :root {
       font-family: sans-serif;
       font-size: 1rem;
@@ -98,19 +90,12 @@
   </section>
 
   <script type="module">
-    //import drag-act.js
-    //import { default as DragAct } from 'https://codepen.io/TPG/pen/rNPXMEq.js';
+    
     import { default as DragAct } from './script.js';
 
-    //instantiate the demo instance
     document.addEventListener('DOMContentLoaded', () => {
 
       const demo = new DragAct('#demo');
-      /*console.log(demo.collection);*/
-
-      demo.addCallback(function () {
-        /* console.log(this.collection); */
-      });
 
     });
 
